@@ -1,5 +1,5 @@
 const emojiList = [
-  "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇"
+  "😈", "🥰", "😷", "💩", "👺", "🤯", "🤑", "🐷", "🐵", "🦇"
 ];
 
 function shuffle(array) {
@@ -13,35 +13,37 @@ function getPairArray(array) {
 }
 
 function tileClicked(evt) {
-  selectedTile = evt.target.querySelector("span").innerText;
+  if (toReset) {
+    firstPair.classList.add("hidden");
+    SecondPair.classList.add("hidden");
+    toReset = false;
+    firstTry = true;
+  }
+  selectedTile = evt.target.querySelector("span");
   evt.target.querySelector("span").classList.remove("hidden");
   if (firstTry) {
-    firstPair = evt.target.querySelector("span");
-    v = selectedTile;
+    firstPair = selectedTile;
     firstTry = false;
-    return;
-  }
-  document.querySelector("#hits").innerHTML = ++hits;;
-  if (firstPair == selectedTile) {
-    firstTry = true;
-    console.log("same tile");
   } else {
-    console.log("not same tile");
-    firstPair.classList.add("hidden");
-    evt.target.querySelector("span").classList.add("hidden");
+    document.querySelector("#hits").innerHTML = ++hits;;
+    if (firstPair.innerHTML == selectedTile.innerHTML) {
+      firstTry = true;
+    } else {
+      SecondPair = selectedTile;
+      toReset = true;
+    }
   }
 }
 
+let toReset = false;
 let hits = 0;
 let firstTry = true;
 let firstPair;
+let SecondPair;
 let a = getPairArray(emojiList);
 shuffle(a);
 
 window.onload = () => {
-  document.querySelector("#turnTile").addEventListener("click", () => {
-    document.querySelectorAll(".tile>span").forEach( (e) => e.classList.toggle("hidden"));
-  });
   for (let i = 0; i < a.length; ++i) {
     const tile = `
       <div class="tile">
